@@ -173,21 +173,28 @@ class _${pascal}ScreenState extends State<${pascal}Screen> {
 
     // Registra a rota no AppModule.
     var text = appModule.readAsStringSync();
+    // Preserva o fim de linha do arquivo (CRLF no Windows com autocrlf).
+    final eol = text.contains('\r\n') ? '\r\n' : '\n';
     final importLine =
-        "import 'package:$pkg/modules/$mod/${mod}_module.dart';\n";
+        "import 'package:$pkg/modules/$mod/${mod}_module.dart';$eol";
     final routeLine =
-        '        ModuleRoute(${pascal}Module.route, module: ${pascal}Module()),\n';
-    final lastImport =
-        RegExp(r'^import .*;\n', multiLine: true).allMatches(text).last;
-    text = text.replaceRange(lastImport.end, lastImport.end, importLine);
-    final routes =
-        RegExp(r'List<ModularRoute> get routes => \[\n').firstMatch(text);
+        '        ModuleRoute(${pascal}Module.route, module: ${pascal}Module()),$eol';
+
+    final imports = RegExp(r'^import .*;[ \t]*\r?\n', multiLine: true)
+        .allMatches(text)
+        .toList();
+    final importAt = imports.isEmpty ? 0 : imports.last.end;
+    text = text.replaceRange(importAt, importAt, importLine);
+
+    final routes = RegExp(r'List<ModularRoute> get routes => \[[ \t]*\r?\n')
+        .firstMatch(text);
     if (routes == null) {
       stdout.writeln(
           'Não achei a lista de rotas: registre ${pascal}Module manualmente.');
     } else {
       text = text.replaceRange(routes.end, routes.end, routeLine);
     }
+
     appModule.writeAsStringSync(text);
 
     stdout.writeln(
