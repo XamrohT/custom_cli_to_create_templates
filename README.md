@@ -1,28 +1,27 @@
 # custom_flutter
 
-CLI para criar projetos Flutter com a nossa arquitetura (Modular + MobX + UseCase/Repository + Dio).
-A fonte do template é o repositório `flutter-template`: nada fica copiado aqui.
+CLI em Dart que cria projetos Flutter com uma arquitetura padrão (Modular + MobX + UseCase/Repository + Dio) e gera módulos novos.
+
+Faz parte de um par de repositórios:
+
+| Repositório | Papel |
+|---|---|
+| [`custom_flutter`](https://github.com/XamrohT/custom_flutter) (este) | A ferramenta. Não contém o template. |
+| [`flutter-template`](https://github.com/XamrohT/flutter-template) | **Fonte da verdade** do código do projeto gerado. |
 
 ## Instalar
 ```bash
-dart pub global activate --source git <url-deste-repo>
-# ou local:
-dart pub global activate --source path E:/Development/custom_flutter
+dart pub global activate --source git https://github.com/XamrohT/custom_flutter.git
 ```
-Coloque o diretório de executáveis do pub no PATH (aqui: `E:\pub-cache\bin`).
+Garanta que o diretório de executáveis do pub está no PATH (`<PUB_CACHE>/bin`; no Windows costuma ser `%LOCALAPPDATA%\Pub\Cache\bin`). Atualizar = rodar o comando de novo.
 
-## Usar
+Pré-requisitos: Flutter/Dart e git no PATH.
+
+## Comandos
 ```bash
-custom_flutter create meu_app --org br.com.empresa [--title "Meu App"] [--no-install] [--no-git]
-cd meu_app
-custom_flutter add module pedidos
+custom_flutter create <nome_snake_case> --org br.com.empresa [--title "Meu App"] [--platforms web,android,ios] [--no-install] [--no-git] [--template <url|pasta>] [--ref <branch|tag>]
+custom_flutter add module <nome_snake_case>      # dentro da raiz de um projeto gerado
 ```
+Atenção: flags longas usam dois hífens (`--org`); `-org` é lido como `-o -r -g`.
 
-## Como o `create` funciona
-1. `flutter create --empty` (plataformas atualizadas).
-2. `git clone --depth 1` do template numa pasta temporária (apagada no fim), sem o `.git`.
-3. Copia `lib/`, `test/`, `pubspec.yaml` etc. renomeando pacote e título.
-4. `pub get`, `intl_utils`, `build_runner` e `git init` novo: o projeto não tem vínculo com o repositório do template.
-
-Opções: `--template <url|pasta>` (outro repo ou pasta local, útil offline) e `--ref <branch|tag>` para fixar versão.
-Como o repositório é privado, precisa de git autenticado (`gh auth login`).
+Documentação de arquitetura e fluxo para agentes/LLMs: veja [AGENTS.md](AGENTS.md).
