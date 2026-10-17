@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:custom_flutter/src/commands/add_command.dart';
-import 'package:custom_flutter/src/commands/create_command.dart';
+import 'package:custom_cli_to_create_templates/src/commands/add_command.dart';
+import 'package:custom_cli_to_create_templates/src/commands/create_command.dart';
 
 Future<void> main(List<String> args) async {
   final runner = CommandRunner<int>(
-    'custom_flutter',
+    'custom_cli_to_create_templates',
     'Gera projetos Flutter com a nossa arquitetura (Modular + MobX + Dio).',
   )
     ..addCommand(CreateCommand())

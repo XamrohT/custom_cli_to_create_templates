@@ -26,7 +26,7 @@ class CreateCommand extends Command<int> {
   final description = 'Cria um projeto Flutter já com a estrutura do template.';
   @override
   String get invocation =>
-      'custom_flutter create <nome_do_projeto> [--org br.com.empresa]';
+      'custom_cli_to_create_templates create <nome_do_projeto> [--org br.com.empresa]';
 
   CreateCommand() {
     argParser
@@ -89,7 +89,7 @@ class CreateCommand extends Command<int> {
     if (!isRemote && Directory(template).existsSync()) {
       src = Directory(template);
     } else {
-      tmp = Directory.systemTemp.createTempSync('custom_flutter_');
+      tmp = Directory.systemTemp.createTempSync('custom_cli_to_create_templates_');
       final ref = argResults!['ref'] as String?;
       await _clone(template, tmp.path, ref: ref);
       src = tmp;

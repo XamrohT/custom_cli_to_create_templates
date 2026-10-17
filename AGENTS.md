@@ -1,13 +1,13 @@
-# AGENTS.md — custom_flutter
+# AGENTS.md — custom_cli_to_create_templates
 
 Guia para LLMs/agentes que usam ou modificam este repositório.
 
 ## O que é
-CLI Dart (`bin/custom_flutter.dart`, pacote `args`) com dois comandos: `create` e `add module`. Ela **não guarda template**: o código do projeto vem do repositório `flutter-template` em tempo de execução.
+CLI Dart (`bin/custom_cli_to_create_templates.dart`, pacote `args`) com dois comandos: `create` e `add module`. Ela **não guarda template**: o código do projeto vem do repositório `flutter-template` em tempo de execução.
 
 ## Como os dois repositórios interagem
 ```
-custom_flutter create meu_app --org br.com.x
+custom_cli_to_create_templates create meu_app --org br.com.x
   1. flutter create --empty --org ... --project-name meu_app   (gera android/ios/web atuais)
   2. git clone --depth 1 <template> -> pasta temporária        (padrão: github.com/XamrohT/flutter-template)
   3. apaga lib/ e test/ do projeto; copia os arquivos do template, exceto:
@@ -40,6 +40,6 @@ custom_flutter create meu_app --org br.com.x
 ## Validar mudanças
 ```bash
 dart analyze
-D=$(mktemp -d) && cd $D && dart run <caminho>/bin/custom_flutter.dart create x_app --template <caminho-do-flutter-template>
-cd x_app && flutter analyze && flutter test && custom_flutter add module pedidos
+D=$(mktemp -d) && cd $D && dart run <caminho>/bin/custom_cli_to_create_templates.dart create x_app --template <caminho-do-flutter-template>
+cd x_app && flutter analyze && flutter test && custom_cli_to_create_templates add module pedidos
 ```

@@ -24,7 +24,7 @@ class _AddModuleCommand extends Command<int> {
   @override
   final description = 'Cria um módulo (Modular + MobX + UseCase + Repository).';
   @override
-  String get invocation => 'custom_flutter add module <nome_snake_case>';
+  String get invocation => 'custom_cli_to_create_templates add module <nome_snake_case>';
 
   _AddModuleCommand() {
     argParser.addFlag('install',
