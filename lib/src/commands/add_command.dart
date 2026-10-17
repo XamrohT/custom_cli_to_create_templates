@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
@@ -22,19 +23,28 @@ class _AddModuleCommand extends Command<int> {
   @override
   final name = 'module';
   @override
-  final description = 'Cria um módulo (Modular + MobX + UseCase + Repository).';
+  final description =
+      'Cria um módulo no projeto atual. A stack (Flutter, React ou Nest) é detectada pela pasta.';
   @override
-  String get invocation => 'custom_cli_to_create_templates add module <nome_snake_case>';
+  String get invocation => 'custom_cli_to_create_templates add module <nome>   (flutter: snake_case; react/nest: kebab-case)';
 
   _AddModuleCommand() {
-    argParser.addFlag('install',
-        defaultsTo: true, help: 'Roda build_runner no final.');
+    argParser
+      ..addFlag('install',
+          defaultsTo: true, help: '[flutter] Roda build_runner no final.')
+      ..addOption('use-case',
+          help: '[nest] Nome (kebab-case) do primeiro use case. Padrão: get-<modulo>.');
   }
 
   @override
   Future<int> run() async {
     if (argResults!.rest.length != 1)
       usageException('Informe o nome do módulo.');
+
+    // React e Nest têm o próprio gerador dentro do template (`npm run add:module`).
+    if (!File('pubspec.yaml').existsSync() && File('package.json').existsSync()) {
+      return _addNodeModule(argResults!.rest.first);
+    }
     final mod = toSnake(argResults!.rest.first);
     if (!isValidPackageName(mod))
       usageException('Nome inválido: use snake_case.');
@@ -203,6 +213,34 @@ class _${pascal}ScreenState extends State<${pascal}Screen> {
       await runProcess('dart',
           ['run', 'build_runner', 'build', '--delete-conflicting-outputs']);
     }
+    return 0;
+  }
+}
+
+extension on _AddModuleCommand {
+  Future<int> _addNodeModule(String raw) async {
+    final name = toKebab(raw);
+    if (!isValidKebabName(name)) {
+      usageException('Nome inválido "$raw": use kebab-case (ex.: pedidos, meus-pedidos).');
+    }
+    final pkg = jsonDecode(File('package.json').readAsStringSync())
+        as Map<String, dynamic>;
+    final scripts = (pkg['scripts'] as Map<String, dynamic>?) ?? const {};
+    if (!scripts.containsKey('add:module')) {
+      usageException(
+          'Este package.json não tem o script "add:module". Rode na raiz de um projeto criado por este CLI (react ou nest).');
+    }
+    final useCase = argResults!['use-case'] as String?;
+    if (useCase != null && !isValidKebabName(useCase)) {
+      usageException('--use-case inválido "$useCase": use kebab-case.');
+    }
+    await runProcess('npm', [
+      'run',
+      'add:module',
+      '--',
+      name,
+      if (useCase != null) ...['--use-case', useCase],
+    ]);
     return 0;
   }
 }

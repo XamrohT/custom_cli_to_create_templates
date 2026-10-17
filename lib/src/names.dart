@@ -14,3 +14,16 @@ String toSnake(String input) => input
 
 final _validName = RegExp(r'^[a-z][a-z0-9_]*$');
 bool isValidPackageName(String n) => _validName.hasMatch(n);
+
+/// `meu_projeto` / `Meu Projeto` -> `meu-projeto`.
+String toKebab(String input) => toSnake(input).replaceAll('_', '-');
+
+final _validKebab = RegExp(r'^[a-z][a-z0-9]*(-[a-z0-9]+)*$');
+bool isValidKebabName(String n) => _validKebab.hasMatch(n);
+
+/// `meu-app` / `meu_app` -> `Meu App`.
+String toTitle(String name) => name
+    .split(RegExp(r'[-_]'))
+    .where((w) => w.isNotEmpty)
+    .map((w) => w[0].toUpperCase() + w.substring(1))
+    .join(' ');

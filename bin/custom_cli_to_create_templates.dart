@@ -7,7 +7,7 @@ import 'package:custom_cli_to_create_templates/src/commands/create_command.dart'
 Future<void> main(List<String> args) async {
   final runner = CommandRunner<int>(
     'custom_cli_to_create_templates',
-    'Gera projetos Flutter com a nossa arquitetura (Modular + MobX + Dio).',
+    'Gera projetos Flutter, React e Nest a partir dos nossos templates e adiciona módulos.',
   )
     ..addCommand(CreateCommand())
     ..addCommand(AddCommand());

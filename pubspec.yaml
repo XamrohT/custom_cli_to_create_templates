@@ -1,5 +1,5 @@
 name: custom_cli_to_create_templates
-description: CLI que cria projetos Flutter com a nossa arquitetura (Modular + MobX + Dio).
+description: CLI que cria projetos Flutter, React e Nest a partir dos templates e gera módulos.
 version: 0.1.0
 publish_to: none
 
